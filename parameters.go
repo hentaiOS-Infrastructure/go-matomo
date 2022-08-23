@@ -21,6 +21,7 @@ type Parameters struct {
 	EventTrackingParameters   *EventTrackingParameters
 	ContentTrackingParameters *ContentTrackingParameters
 	EcommerceParameters       *EcommerceParameters
+	OtherParameters           *OtherParameters
 }
 
 // RecommendedParameters are the recommended parameters that really should be provided on each call if available
