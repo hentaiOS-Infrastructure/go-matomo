@@ -7,9 +7,10 @@ import (
 )
 
 type Configuration struct {
-	Domain string
-	SiteID string // if not provided, will be required in the call
-	Rec    string // currently must always be set to 1
+	Domain    string
+	AuthToken string
+	SiteID    string // if not provided, will be required in the call
+	Rec       string // currently must always be set to 1
 }
 
 var config *Configuration
@@ -28,6 +29,7 @@ func Setup() {
 	// make sure they didn't put the matomo.php at the end
 	config.Domain = strings.TrimSuffix(config.Domain, "matomo.php")
 	config.SiteID = envHelper("MATOMO_SITE_ID", "")
+	config.AuthToken = envHelper("MATOMO_AUTH_TOKEN", "")
 
 	config.Rec = "1"
 

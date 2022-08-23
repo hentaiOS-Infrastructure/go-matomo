@@ -113,6 +113,11 @@ type ContentTrackingParameters struct {
 type EcommerceParameters struct {
 }
 
+type OtherParameters struct {
+	// Override value for the visitor IP (both IPv4 and IPv6 notations supported).
+	CIP *string `json:"cip" matomo:"cip"`
+}
+
 // StringPtr converts a static string to a pointer for use in the api
 func StringPtr(input string) *string {
 	return &input
@@ -163,6 +168,12 @@ func (params *Parameters) encode() map[string]string {
 	}
 	if params.ActionParameters != nil {
 		subRet := params.ActionParameters.encode()
+		for k, v := range subRet {
+			ret[k] = v
+		}
+	}
+	if params.OtherParameters != nil {
+		subRet := params.OtherParameters.encode()
 		for k, v := range subRet {
 			ret[k] = v
 		}
@@ -369,6 +380,21 @@ func (params *ActionParameters) encode() map[string]string {
 	// DownloadURL is optional
 	if params.Download != nil {
 		ret["download"] = url.QueryEscape(*params.Download)
+	}
+
+	return ret
+}
+
+func (params *OtherParameters) encode() map[string]string {
+	ret := map[string]string{}
+	if params == nil {
+		return ret
+	}
+	if config.AuthToken == "" {
+		return ret
+	}
+	if params.CIP != nil {
+		ret["cip"] = url.QueryEscape(*params.CIP)
 	}
 
 	return ret

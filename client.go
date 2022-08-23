@@ -27,6 +27,10 @@ func SendToSite(siteID string, params *Parameters) error {
 	// set the required parameters
 	data["idsite"] = siteID
 	data["rec"] = config.Rec
+	// If AuthToken is set, we need to set AuthToken
+	if config.AuthToken != "" {
+		data["token_auth"] = config.AuthToken
+	}
 
 	client := resty.New()
 	resp, err := client.R().SetQueryParams(data).Get(config.Domain + "/matomo.php")
