@@ -4,7 +4,7 @@ A simple Go SDK for sending data to a Matomo instance. This is useful for tracki
 
 ## Installation
 
-`go get github.com/treelightsoftware/go-matomo`
+`go get github.com/hentaiOS-Infrastructure/go-matomo`
 
 ## Configuration
 

@@ -88,6 +88,8 @@ type UserPlugins struct {
 	Silverlight *bool `json:"ag" matomo:"ag"`
 }
 type ActionParameters struct {
+	// URL of a file the user has downloaded. Used for tracking downloads. We recommend to also set the url parameter to this same value.
+	Download *string `json:"download" matomo:"download"`
 }
 
 type PagePerformanceParameters struct {
@@ -155,6 +157,12 @@ func (params *Parameters) encode() map[string]string {
 	}
 	if params.EventTrackingParameters != nil {
 		subRet := params.EventTrackingParameters.encode()
+		for k, v := range subRet {
+			ret[k] = v
+		}
+	}
+	if params.ActionParameters != nil {
+		subRet := params.ActionParameters.encode()
 		for k, v := range subRet {
 			ret[k] = v
 		}
@@ -348,6 +356,19 @@ func (params *EventTrackingParameters) encode() map[string]string {
 	}
 	if params.Value != nil {
 		ret["e_v"] = url.QueryEscape(fmt.Sprintf("%v", *params.Value))
+	}
+
+	return ret
+}
+
+func (params *ActionParameters) encode() map[string]string {
+	ret := map[string]string{}
+	if params == nil {
+		return ret
+	}
+	// DownloadURL is optional
+	if params.Download != nil {
+		ret["download"] = url.QueryEscape(*params.Download)
 	}
 
 	return ret
