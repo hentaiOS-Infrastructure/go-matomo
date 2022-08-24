@@ -26,16 +26,23 @@ type Parameters struct {
 
 // RecommendedParameters are the recommended parameters that really should be provided on each call if available
 type RecommendedParameters struct {
-	// The title of the action being tracked. It is possible to use slashes / to set one or several categories for this action. For example, Help / Feedback will create the Action Feedback in the category Help.
-	ActionName *string `json:"action_name" matomo:"action_name"`
-	// The full URL for the current action.
-	URL *string `json:"url" matomo:"url"`
-	// The unique visitor ID, must be a 16 characters hexadecimal string. Every unique visitor must be assigned a different ID and this ID must not change after it is assigned. If this value is not set Matomo (formerly Piwik) will still track visits, but the unique visitors metric might be less accurate.
-	VisitorID *string `json:"_id" matomo:"_id"`
 	// Meant to hold a random value that is generated before each request. Using it helps avoid the tracking request being cached by the browser or a proxy. If not set, the SDK will set it for you.
 	Rand *int64 `json:"rand" matomo:"rand"` // generated at call time if not provided
 	// The parameter &apiv=1 defines the api version to use (currently always set to 1). The SDK sets this for you.
 	APIV *int64 `json:"apiv" matomo:"apiv"` // always set to 1
+}
+
+type ActionParameters struct {
+	// The title of the action being tracked. It is possible to use slashes / to set one or several categories for this action. For example, Help / Feedback will create the Action Feedback in the category Help.
+	ActionName *string `json:"action_name" matomo:"action_name"`
+	// The full URL for the current action.
+	Url *string `json:"url" matomo:"url"`
+	// The unique visitor ID, must be a 16 characters hexadecimal string. Every unique visitor must be assigned a different ID and this ID must not change after it is assigned. If this value is not set Matomo (formerly Piwik) will still track visits, but the unique visitors metric might be less accurate.
+	VisitorID *string `json:"_id" matomo:"_id"`
+	// URL of a file the user has downloaded. Used for tracking downloads.
+	Download *string `json:"download" matomo:"download"`
+	// An external URL the user has opened. Used for tracking outlink clicks.
+	Link *string `json:"link" matomo:"link"`
 }
 
 // UserParameters are user specific parameters for the event
@@ -88,10 +95,6 @@ type UserPlugins struct {
 	Gears       *bool `json:"gears" matomo:"gears"`
 	Silverlight *bool `json:"ag" matomo:"ag"`
 }
-type ActionParameters struct {
-	// URL of a file the user has downloaded. Used for tracking downloads. We recommend to also set the url parameter to this same value.
-	Download *string `json:"download" matomo:"download"`
-}
 
 type PagePerformanceParameters struct {
 }
@@ -109,6 +112,14 @@ type EventTrackingParameters struct {
 }
 
 type ContentTrackingParameters struct {
+	// The name of the content. For instance 'Ad Foo Bar'
+	Name *string `json:"c_n" matomo:"c_n"`
+	// The actual content piece. For instance the path to an image, video, audio, any text
+	Piece *string `json:"c_p" matomo:"c_p"`
+	// The target of the content. For instance the URL of a landing page
+	Target *string `json:"c_t" matomo:"c_t"`
+	// The name of the interaction with the content. For instance a 'click'
+	Interaction *string `json:"c_i" matomo:"c_i"`
 }
 
 type EcommerceParameters struct {
@@ -167,6 +178,12 @@ func (params *Parameters) encode() map[string]string {
 			ret[k] = v
 		}
 	}
+	if params.ContentTrackingParameters != nil {
+		subRet := params.ContentTrackingParameters.encode()
+		for k, v := range subRet {
+			ret[k] = v
+		}
+	}
 	if params.ActionParameters != nil {
 		subRet := params.ActionParameters.encode()
 		for k, v := range subRet {
@@ -196,15 +213,6 @@ func (params *RecommendedParameters) encode() map[string]string {
 	// loop through the fields
 	ret["apiv"] = url.QueryEscape(fmt.Sprintf("%v", *params.APIV))
 	ret["rand"] = url.QueryEscape(fmt.Sprintf("%v", *params.Rand))
-	if params.ActionName != nil {
-		ret["action_name"] = url.QueryEscape(*params.ActionName)
-	}
-	if params.VisitorID != nil {
-		ret["_id"] = url.QueryEscape(*params.VisitorID)
-	}
-	if params.URL != nil {
-		ret["url"] = url.QueryEscape(*params.URL)
-	}
 
 	return ret
 }
@@ -239,6 +247,9 @@ func (params *UserParameters) encode() map[string]string {
 	}
 	if params.Resolution != nil {
 		ret["res"] = url.QueryEscape(*params.Resolution)
+	}
+	if params.UserAgent != nil {
+		ret["ua"] = url.QueryEscape(*params.UserAgent)
 	}
 	if params.CurrentHour != nil {
 		ret["h"] = url.QueryEscape(*params.CurrentHour)
@@ -373,14 +384,55 @@ func (params *EventTrackingParameters) encode() map[string]string {
 	return ret
 }
 
+func (params *ContentTrackingParameters) encode() map[string]string {
+	ret := map[string]string{}
+	if params == nil {
+		return ret
+	}
+
+	if params.Name != nil {
+		ret["c_n"] = url.QueryEscape(*params.Name)
+	}
+
+	if params.Piece != nil {
+		ret["c_p"] = url.QueryEscape(*params.Piece)
+	}
+
+	if params.Interaction != nil {
+		ret["c_i"] = url.QueryEscape(*params.Interaction)
+	}
+
+	if params.Target != nil {
+		ret["c_t"] = url.QueryEscape(*params.Target)
+	}
+
+	return ret
+
+}
+
 func (params *ActionParameters) encode() map[string]string {
 	ret := map[string]string{}
 	if params == nil {
 		return ret
 	}
+
+	if params.ActionName != nil {
+		ret["action_name"] = url.QueryEscape(*params.ActionName)
+	}
+	if params.VisitorID != nil {
+		ret["_id"] = url.QueryEscape(*params.VisitorID)
+	}
+	if params.Url != nil {
+		ret["url"] = url.QueryEscape(*params.Url)
+	}
+
 	// DownloadURL is optional
 	if params.Download != nil {
 		ret["download"] = url.QueryEscape(*params.Download)
+	}
+
+	if params.Link != nil {
+		ret["link"] = url.QueryEscape(*params.Link)
 	}
 
 	return ret

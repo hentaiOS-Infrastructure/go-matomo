@@ -33,7 +33,7 @@ func SendToSite(siteID string, params *Parameters) error {
 	}
 
 	client := resty.New()
-	resp, err := client.R().SetQueryParams(data).Get(config.Domain + "/matomo.php")
+	resp, err := client.R().SetQueryParams(data).Post(config.Domain + "/matomo.php")
 	if err != nil {
 		return err
 	}
