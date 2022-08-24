@@ -30,6 +30,8 @@ type RecommendedParameters struct {
 	Rand *int64 `json:"rand" matomo:"rand"` // generated at call time if not provided
 	// The parameter &apiv=1 defines the api version to use (currently always set to 1). The SDK sets this for you.
 	APIV *int64 `json:"apiv" matomo:"apiv"` // always set to 1
+	// Matomo will respond with a HTTP 204 response code instead of a GIF image.
+	SendImage *int64 `json:"send_image" matomo:"send_image"`
 }
 
 type ActionParameters struct {
@@ -207,11 +209,13 @@ func (params *RecommendedParameters) encode() map[string]string {
 	}
 	// set the required constants
 	params.APIV = Int64Ptr(1)
+	params.SendImage = Int64Ptr(0)
 	if params.Rand == nil {
 		params.Rand = Int64Ptr(rand.Int63n(99999999999999999))
 	}
 	// loop through the fields
 	ret["apiv"] = url.QueryEscape(fmt.Sprintf("%v", *params.APIV))
+	ret["send_image"] = url.QueryEscape(fmt.Sprintf("%v", *params.SendImage))
 	ret["rand"] = url.QueryEscape(fmt.Sprintf("%v", *params.Rand))
 
 	return ret
@@ -423,16 +427,15 @@ func (params *ActionParameters) encode() map[string]string {
 		ret["_id"] = url.QueryEscape(*params.VisitorID)
 	}
 	if params.Url != nil {
-		ret["url"] = url.QueryEscape(*params.Url)
+		ret["url"] = *params.Url
 	}
 
-	// DownloadURL is optional
 	if params.Download != nil {
-		ret["download"] = url.QueryEscape(*params.Download)
+		ret["download"] = *params.Download
 	}
 
 	if params.Link != nil {
-		ret["link"] = url.QueryEscape(*params.Link)
+		ret["link"] = *params.Link
 	}
 
 	return ret
