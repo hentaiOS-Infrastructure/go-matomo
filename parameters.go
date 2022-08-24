@@ -5,7 +5,6 @@ package matomo
 import (
 	"fmt"
 	"math/rand"
-	"net/url"
 	"time"
 )
 
@@ -214,9 +213,9 @@ func (params *RecommendedParameters) encode() map[string]string {
 		params.Rand = Int64Ptr(rand.Int63n(99999999999999999))
 	}
 	// loop through the fields
-	ret["apiv"] = url.QueryEscape(fmt.Sprintf("%v", *params.APIV))
-	ret["send_image"] = url.QueryEscape(fmt.Sprintf("%v", *params.SendImage))
-	ret["rand"] = url.QueryEscape(fmt.Sprintf("%v", *params.Rand))
+	ret["apiv"] = fmt.Sprintf("%v", *params.APIV)
+	ret["send_image"] = fmt.Sprintf("%v", *params.SendImage)
+	ret["rand"] = fmt.Sprintf("%v", *params.Rand)
 
 	return ret
 }
@@ -229,62 +228,62 @@ func (params *UserParameters) encode() map[string]string {
 	now := time.Now()
 	// convert the fields
 	if params.URLRef != nil {
-		ret["urlref"] = url.QueryEscape(*params.URLRef)
+		ret["urlref"] = *params.URLRef
 	}
 	if params.CVar != nil {
-		ret["_cvar"] = url.QueryEscape(*params.CVar)
+		ret["_cvar"] = *params.CVar
 	}
 	if params.IDVC != nil {
-		ret["_idvc"] = url.QueryEscape(fmt.Sprintf("%v", *params.IDVC))
+		ret["_idvc"] = fmt.Sprintf("%v", *params.IDVC)
 	}
 	if params.ViewTS != nil {
-		ret["_viewts"] = url.QueryEscape(fmt.Sprintf("%v", *params.ViewTS))
+		ret["_viewts"] = fmt.Sprintf("%v", *params.ViewTS)
 	}
 	if params.IDTS != nil {
-		ret["_idts"] = url.QueryEscape(fmt.Sprintf("%v", *params.IDTS))
+		ret["_idts"] = fmt.Sprintf("%v", *params.IDTS)
 	}
 	if params.CampaignName != nil {
-		ret["_rcn"] = url.QueryEscape(*params.CampaignName)
+		ret["_rcn"] = *params.CampaignName
 	}
 	if params.CampaignKeyword != nil {
-		ret["_rck"] = url.QueryEscape(*params.CampaignKeyword)
+		ret["_rck"] = *params.CampaignKeyword
 	}
 	if params.Resolution != nil {
-		ret["res"] = url.QueryEscape(*params.Resolution)
+		ret["res"] = *params.Resolution
 	}
 	if params.UserAgent != nil {
-		ret["ua"] = url.QueryEscape(*params.UserAgent)
+		ret["ua"] = *params.UserAgent
 	}
 	if params.CurrentHour != nil {
-		ret["h"] = url.QueryEscape(*params.CurrentHour)
+		ret["h"] = *params.CurrentHour
 	} else {
-		ret["h"] = url.QueryEscape(now.Format("15"))
+		ret["h"] = now.Format("15")
 	}
 	if params.CurrentMinute != nil {
-		ret["m"] = url.QueryEscape(*params.CurrentMinute)
+		ret["m"] = *params.CurrentMinute
 	} else {
-		ret["m"] = url.QueryEscape(now.Format("04"))
+		ret["m"] = now.Format("04")
 	}
 	if params.CurrentSecond != nil {
-		ret["s"] = url.QueryEscape(*params.CurrentSecond)
+		ret["s"] = *params.CurrentSecond
 	} else {
-		ret["s"] = url.QueryEscape(now.Format("05"))
+		ret["s"] = now.Format("05")
 	}
 	if params.CookiesSupported != nil {
 		if *params.CookiesSupported {
-			ret["cookie"] = url.QueryEscape("1")
+			ret["cookie"] = "1"
 		} else {
-			ret["cookie"] = url.QueryEscape("0")
+			ret["cookie"] = "0"
 		}
 	}
 	if params.Lang != nil {
-		ret["lang"] = url.QueryEscape(*params.Lang)
+		ret["lang"] = *params.Lang
 	}
 	if params.UserID != nil {
-		ret["uid"] = url.QueryEscape(*params.UserID)
+		ret["uid"] = *params.UserID
 	}
 	if params.NewVisit != nil {
-		ret["new_visit"] = url.QueryEscape("1")
+		ret["new_visit"] = "1"
 	}
 
 	// now plugins
@@ -303,65 +302,65 @@ func (params *UserPlugins) encode() map[string]string {
 	}
 	if params.Flash != nil {
 		if *params.Flash {
-			ret["fla"] = url.QueryEscape("1")
+			ret["fla"] = "1"
 		} else {
-			ret["fla"] = url.QueryEscape("0")
+			ret["fla"] = "0"
 		}
 	}
 	if params.Java != nil {
 		if *params.Java {
-			ret["java"] = url.QueryEscape("1")
+			ret["java"] = "1"
 		} else {
-			ret["java"] = url.QueryEscape("0")
+			ret["java"] = "0"
 		}
 	}
 	if params.Director != nil {
 		if *params.Director {
-			ret["dir"] = url.QueryEscape("1")
+			ret["dir"] = "1"
 		} else {
-			ret["dir"] = url.QueryEscape("0")
+			ret["dir"] = "0"
 		}
 	}
 	if params.Quicktime != nil {
 		if *params.Quicktime {
-			ret["qt"] = url.QueryEscape("1")
+			ret["qt"] = "1"
 		} else {
-			ret["qt"] = url.QueryEscape("0")
+			ret["qt"] = "0"
 		}
 	}
 	if params.RealPlayer != nil {
 		if *params.RealPlayer {
-			ret["realp"] = url.QueryEscape("1")
+			ret["realp"] = "1"
 		} else {
-			ret["realp"] = url.QueryEscape("0")
+			ret["realp"] = "0"
 		}
 	}
 	if params.PDF != nil {
 		if *params.PDF {
-			ret["pdf"] = url.QueryEscape("1")
+			ret["pdf"] = "1"
 		} else {
-			ret["pdf"] = url.QueryEscape("0")
+			ret["pdf"] = "0"
 		}
 	}
 	if params.WMA != nil {
 		if *params.WMA {
-			ret["wma"] = url.QueryEscape("1")
+			ret["wma"] = "1"
 		} else {
-			ret["wma"] = url.QueryEscape("0")
+			ret["wma"] = "0"
 		}
 	}
 	if params.Gears != nil {
 		if *params.Gears {
-			ret["gears"] = url.QueryEscape("1")
+			ret["gears"] = "1"
 		} else {
-			ret["gears"] = url.QueryEscape("0")
+			ret["gears"] = "0"
 		}
 	}
 	if params.Silverlight != nil {
 		if *params.Silverlight {
-			ret["ag"] = url.QueryEscape("1")
+			ret["ag"] = "1"
 		} else {
-			ret["ag"] = url.QueryEscape("0")
+			ret["ag"] = "0"
 		}
 	}
 
@@ -375,14 +374,14 @@ func (params *EventTrackingParameters) encode() map[string]string {
 	}
 	// both Action and Category are required
 	if params.Action != nil && params.Category != nil {
-		ret["e_c"] = url.QueryEscape(*params.Category)
-		ret["e_a"] = url.QueryEscape(*params.Action)
+		ret["e_c"] = *params.Category
+		ret["e_a"] = *params.Action
 	}
 	if params.Name != nil {
-		ret["e_n"] = url.QueryEscape(*params.Name)
+		ret["e_n"] = *params.Name
 	}
 	if params.Value != nil {
-		ret["e_v"] = url.QueryEscape(fmt.Sprintf("%v", *params.Value))
+		ret["e_v"] = fmt.Sprintf("%v", *params.Value)
 	}
 
 	return ret
@@ -395,19 +394,19 @@ func (params *ContentTrackingParameters) encode() map[string]string {
 	}
 
 	if params.Name != nil {
-		ret["c_n"] = url.QueryEscape(*params.Name)
+		ret["c_n"] = *params.Name
 	}
 
 	if params.Piece != nil {
-		ret["c_p"] = url.QueryEscape(*params.Piece)
+		ret["c_p"] = *params.Piece
 	}
 
 	if params.Interaction != nil {
-		ret["c_i"] = url.QueryEscape(*params.Interaction)
+		ret["c_i"] = *params.Interaction
 	}
 
 	if params.Target != nil {
-		ret["c_t"] = url.QueryEscape(*params.Target)
+		ret["c_t"] = *params.Target
 	}
 
 	return ret
@@ -421,10 +420,10 @@ func (params *ActionParameters) encode() map[string]string {
 	}
 
 	if params.ActionName != nil {
-		ret["action_name"] = url.QueryEscape(*params.ActionName)
+		ret["action_name"] = *params.ActionName
 	}
 	if params.VisitorID != nil {
-		ret["_id"] = url.QueryEscape(*params.VisitorID)
+		ret["_id"] = *params.VisitorID
 	}
 	if params.Url != nil {
 		ret["url"] = *params.Url
@@ -450,7 +449,7 @@ func (params *OtherParameters) encode() map[string]string {
 		return ret
 	}
 	if params.CIP != nil {
-		ret["cip"] = url.QueryEscape(*params.CIP)
+		ret["cip"] = *params.CIP
 	}
 
 	return ret

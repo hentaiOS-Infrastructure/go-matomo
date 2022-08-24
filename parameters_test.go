@@ -46,7 +46,7 @@ func TestUserParameterEncoding(t *testing.T) {
 	assert.Equal(t, fmt.Sprintf("%d", *testUserParams.IDTS), encoded["_idts"])
 	assert.Equal(t, fmt.Sprintf("%d", *testUserParams.ViewTS), encoded["_viewts"])
 	assert.Equal(t, "1", encoded["_idvc"])
-	assert.Equal(t, "Keyword+Test", encoded["_rck"])
+	assert.Equal(t, "Keyword Test", encoded["_rck"])
 	assert.Equal(t, "Testing", encoded["_rcn"])
 	assert.Equal(t, encoded["ua"], encoded["ua"])
 	assert.Equal(t, "0", encoded["ag"])
@@ -62,7 +62,7 @@ func TestUserParameterEncoding(t *testing.T) {
 	assert.Equal(t, "0", encoded["realp"])
 	assert.Equal(t, "1x1", encoded["res"])
 	assert.Equal(t, "test-user", encoded["uid"])
-	assert.Equal(t, "%2Fusers", encoded["urlref"])
+	assert.Equal(t, "/users", encoded["urlref"])
 	assert.Equal(t, "0", encoded["wma"])
 
 }
@@ -88,8 +88,8 @@ func TestActionParametersEncodings(t *testing.T) {
 	encoded = testActionParams.encode()
 	assert.Equal(t, url.QueryEscape(*testActionParams.ActionName), encoded["action_name"])
 	assert.Equal(t, *testActionParams.Url, encoded["url"])
-	assert.Equal(t, *testActionParams.Download, encoded["download"])
-	//assert.Equal(t, url.QueryEscape(*testActionParams.Link), encoded["link"])
+	// assert.Equal(t, *testActionParams.Download, encoded["download"])
+	assert.Equal(t, *testActionParams.Link, encoded["link"])
 }
 
 func TestContentParameterEncodings(t *testing.T) {
@@ -99,7 +99,7 @@ func TestContentParameterEncodings(t *testing.T) {
 	assert.Equal(t, 0, len(encoded))
 	// populate all the fields and encode
 	encoded = testContentParams.encode()
-	assert.Equal(t, url.QueryEscape(*testContentParams.Target), encoded["c_t"])
+	assert.Equal(t, *testContentParams.Target, encoded["c_t"])
 	assert.Equal(t, url.QueryEscape(*testContentParams.Piece), encoded["c_p"])
 	assert.Equal(t, url.QueryEscape(*testContentParams.Name), encoded["c_n"])
 	assert.Equal(t, url.QueryEscape(*testContentParams.Interaction), encoded["c_i"])
@@ -110,7 +110,7 @@ var testAllParams = Parameters{
 	ActionParameters:          testActionParams,
 	UserParameters:            testUserParams,
 	PagePerformanceParameters: &PagePerformanceParameters{},
-	//EventTrackingParameters:   testEventParams,
+	// EventTrackingParameters:   testEventParams,
 	ContentTrackingParameters: testContentParams,
 	EcommerceParameters:       &EcommerceParameters{},
 }
@@ -119,7 +119,7 @@ var testActionParams = &ActionParameters{
 	ActionName: StringPtr("Hello from Among Us"),
 	Url:        StringPtr("https://laboratory.luvvvvuratory.raphielscape.com/"),
 	Download:   StringPtr("https://laboratory.luvvvvuratory.raphielscape.com/download.zip"),
-	Link:       StringPtr("https://laboratory.luvvvvuratory.raphielscape.com/hyperbolic"),
+	Link:       StringPtr("https://laboratory.luvvvvuratory.raphielscape.com/download.zip"),
 }
 
 var testUserParams = &UserParameters{
@@ -158,7 +158,7 @@ var testEventParams = &EventTrackingParameters{
 
 var testContentParams = &ContentTrackingParameters{
 	Name:        StringPtr("Content Name"),
-	Piece:       StringPtr("Dummy Content"),
-	Target:      StringPtr("among_us.zip"),
+	Piece:       StringPtr("download.zip"),
+	Target:      StringPtr("https://laboratory.luvvvvuratory.raphielscape.com/download.zip"),
 	Interaction: StringPtr("Event"),
 }
