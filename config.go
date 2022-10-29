@@ -2,6 +2,7 @@ package matomo
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 )
@@ -23,7 +24,7 @@ func Setup() {
 	config.Domain = strings.TrimSuffix(envHelper("MATOMO_DOMAIN", ""), "/")
 	if config.Domain == "" {
 		// TODO: convert to logger
-		fmt.Printf("\n----------------------------\nERROR: MATOMO_DOMAIN was not set, so events will not be tracked\n----------------------------\n")
+		log.Printf("ERROR: MATOMO_DOMAIN was not set, so events will not be tracked")
 		fmt.Fprintf(os.Stderr, "ERROR: MATOMO_DOMAIN was not set, so events will not be tracked\n")
 	}
 	// make sure they didn't put the matomo.php at the end

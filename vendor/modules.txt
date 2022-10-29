@@ -7,10 +7,10 @@ github.com/go-resty/resty/v2
 # github.com/pmezard/go-difflib v1.0.0
 ## explicit
 github.com/pmezard/go-difflib/difflib
-# github.com/stretchr/testify v1.8.0
+# github.com/stretchr/testify v1.8.1
 ## explicit; go 1.13
 github.com/stretchr/testify/assert
-# golang.org/x/net v0.0.0-20220225172249-27dd8689420f
+# golang.org/x/net v0.1.0
 ## explicit; go 1.17
 golang.org/x/net/publicsuffix
 # gopkg.in/yaml.v3 v3.0.1

@@ -3,7 +3,6 @@ package matomo
 import (
 	"fmt"
 	"math/rand"
-	"net/url"
 	"testing"
 	"time"
 
@@ -31,6 +30,7 @@ func TestAllEncoding(t *testing.T) {
 
 	encoded = testAllParams.encode()
 	assert.Equal(t, len(encoded), len(encoded)) // this will increase as more fields are supported
+	fmt.Println(encoded)
 }
 
 func TestUserParameterEncoding(t *testing.T) {
@@ -73,10 +73,10 @@ func TestEventParameterEncodings(t *testing.T) {
 	assert.Equal(t, 0, len(encoded))
 	// populate all the fields and encode
 	encoded = testEventParams.encode()
-	assert.Equal(t, url.QueryEscape(*testEventParams.Category), encoded["e_c"])
-	assert.Equal(t, url.QueryEscape(*testEventParams.Action), encoded["e_a"])
-	assert.Equal(t, url.QueryEscape(*testEventParams.Name), encoded["e_n"])
-	assert.Equal(t, url.QueryEscape(fmt.Sprintf("%v", *testEventParams.Value)), encoded["e_v"])
+	assert.Equal(t, *testEventParams.Category, encoded["e_c"])
+	assert.Equal(t, *testEventParams.Action, encoded["e_a"])
+	assert.Equal(t, *testEventParams.Name, encoded["e_n"])
+	assert.Equal(t, fmt.Sprintf("%v", *testEventParams.Value), encoded["e_v"])
 }
 
 func TestActionParametersEncodings(t *testing.T) {
@@ -86,9 +86,9 @@ func TestActionParametersEncodings(t *testing.T) {
 	assert.Equal(t, 0, len(encoded))
 	// populate all the fields and encode
 	encoded = testActionParams.encode()
-	assert.Equal(t, url.QueryEscape(*testActionParams.ActionName), encoded["action_name"])
+	assert.Equal(t, *testActionParams.ActionName, encoded["action_name"])
 	assert.Equal(t, *testActionParams.Url, encoded["url"])
-	// assert.Equal(t, *testActionParams.Download, encoded["download"])
+	assert.Equal(t, *testActionParams.Download, encoded["download"])
 	assert.Equal(t, *testActionParams.Link, encoded["link"])
 }
 
@@ -100,42 +100,41 @@ func TestContentParameterEncodings(t *testing.T) {
 	// populate all the fields and encode
 	encoded = testContentParams.encode()
 	assert.Equal(t, *testContentParams.Target, encoded["c_t"])
-	assert.Equal(t, url.QueryEscape(*testContentParams.Piece), encoded["c_p"])
-	assert.Equal(t, url.QueryEscape(*testContentParams.Name), encoded["c_n"])
-	assert.Equal(t, url.QueryEscape(*testContentParams.Interaction), encoded["c_i"])
+	assert.Equal(t, *testContentParams.Piece, encoded["c_p"])
+	assert.Equal(t, *testContentParams.Name, encoded["c_n"])
+	assert.Equal(t, *testContentParams.Interaction, encoded["c_i"])
 }
 
 var testAllParams = Parameters{
 	RecommendedParameters:     &RecommendedParameters{},
-	ActionParameters:          testActionParams,
 	UserParameters:            testUserParams,
+	ActionParameters:          testActionParams,
 	PagePerformanceParameters: &PagePerformanceParameters{},
-	// EventTrackingParameters:   testEventParams,
+	EventTrackingParameters:   &EventTrackingParameters{},
 	ContentTrackingParameters: testContentParams,
 	EcommerceParameters:       &EcommerceParameters{},
+	OtherParameters:           &OtherParameters{},
 }
 
 var testActionParams = &ActionParameters{
-	ActionName: StringPtr("Hello from Among Us"),
-	Url:        StringPtr("https://laboratory.luvvvvuratory.raphielscape.com/"),
+	ActionName: StringPtr("Welcome to Sussy Baka Among Us"),
+	Url:        StringPtr("https://wiki.helluvaos.com/"),
 	Download:   StringPtr("https://laboratory.luvvvvuratory.raphielscape.com/download.zip"),
-	Link:       StringPtr("https://laboratory.luvvvvuratory.raphielscape.com/download.zip"),
+	Link:       StringPtr("https://wiki.helluvaos.com/"),
 }
 
 var testUserParams = &UserParameters{
-	URLRef:           StringPtr("/users"),
-	CVar:             StringPtr("{\"id\": 1}"),
-	IDVC:             Int64Ptr(1),
-	ViewTS:           Int64Ptr(time.Now().Add(-1 * time.Minute).Unix()),
-	IDTS:             Int64Ptr(time.Now().Add(-10 * time.Minute).Unix()),
-	CampaignName:     StringPtr("Testing"),
-	CampaignKeyword:  StringPtr("Keyword Test"),
-	Resolution:       StringPtr("1x1"),
-	CookiesSupported: BoolPtr(true),
-	UserAgent:        StringPtr("Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:104.0) Gecko/20100101 Firefox/104.0"),
-	Lang:             StringPtr("en-US"),
-	UserID:           StringPtr("test-user"),
-	NewVisit:         BoolPtr(true),
+	URLRef:          StringPtr("/users"),
+	CVar:            StringPtr("{\"id\": 1}"),
+	IDVC:            Int64Ptr(1),
+	ViewTS:          Int64Ptr(time.Now().Add(-1 * time.Minute).Unix()),
+	IDTS:            Int64Ptr(time.Now().Add(-10 * time.Minute).Unix()),
+	CampaignName:    StringPtr("Testing"),
+	CampaignKeyword: StringPtr("Keyword Test"),
+	Resolution:      StringPtr("1x1"),
+	CurrentHour:     new(string),
+	CurrentMinute:   new(string),
+	CurrentSecond:   new(string),
 	UserPlugins: &UserPlugins{
 		Flash:       BoolPtr(false),
 		Java:        BoolPtr(false),
@@ -145,8 +144,12 @@ var testUserParams = &UserParameters{
 		PDF:         BoolPtr(true),
 		WMA:         BoolPtr(false),
 		Gears:       BoolPtr(false),
-		Silverlight: BoolPtr(false),
-	},
+		Silverlight: BoolPtr(false)},
+	CookiesSupported: BoolPtr(true),
+	UserAgent:        StringPtr("Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:104.0) Gecko/20100101 Firefox/104.0"),
+	Lang:             StringPtr("en-US"),
+	UserID:           StringPtr("test-user"),
+	NewVisit:         BoolPtr(true),
 }
 
 var testEventParams = &EventTrackingParameters{

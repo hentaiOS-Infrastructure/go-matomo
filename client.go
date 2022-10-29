@@ -33,7 +33,14 @@ func SendToSite(siteID string, params *Parameters) error {
 	}
 
 	client := resty.New()
-	resp, err := client.R().SetQueryParams(data).Post(config.Domain + "/matomo.php")
+	resp, err := client.R().
+		SetHeaders(map[string]string{
+			"User-Agent":  "Ookami/1.2 (SaulGoodman; PonyExpress 1.4.1; ThyrobriaTower/THSW) HellWebService/225.10 (Not a Gecko) AntiFrontgears/10.2.1104.12 Tighnari Hellverse/225.10",
+			"H-Chainsaw":  "Credo in amogum et impostores suspectos, Quo fugiam ab eorum spiritibus.",
+			"H-Hellverse": "Doryoku, mirai, a beautiful star",
+		}).
+		SetJSONEscapeHTML(true).SetQueryParams(data).
+		Post(config.Domain + "/matomo.php")
 	if err != nil {
 		return err
 	}
